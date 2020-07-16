@@ -1,26 +1,25 @@
-import React, { useEffect, useState } from 'react';
-import { Message } from '@discover-daily/api-interfaces';
+import React, { useContext } from 'react';
+import { Route, Switch } from 'react-router-dom';
+import { AuthContext } from './contexts/auth.context';
+import { Dashboard } from './pages/dashboard';
+import { Landing } from './pages/landing';
+import { Login } from './pages/login';
 
 export const App = () => {
-  const [m, setMessage] = useState<Message>({ message: '' });
-
-  useEffect(() => {
-    fetch('/api')
-      .then((r) => r.json())
-      .then(setMessage);
-  }, []);
-
-  return (
-    <>
-      <div style={{ textAlign: 'center' }}>
-        <h1>Welcome to discover-daily!</h1>
-        <img
-          width="450"
-          src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png"
-        />
-      </div>
-      <div>{m.message}</div>
-    </>
+  const { isAuthed, isHydrated } = useContext(AuthContext);
+  return (isHydrated ?
+      <Switch>
+        <Route path="/login/success">
+          <Login/>
+        </Route>
+        <Route path="/login">
+          <Login/>
+        </Route>
+        <Route path="/">
+          {isAuthed ? <Dashboard/> : <Landing/>}
+        </Route>
+      </Switch>
+      : null
   );
 };
 

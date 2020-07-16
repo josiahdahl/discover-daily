@@ -1,13 +1,7 @@
-import * as express from 'express';
-import { Message } from '@discover-daily/api-interfaces';
-
-const app = express();
-
-const greeting: Message = { message: 'Welcome to api!' };
-
-app.get('/api', (req, res) => {
-  res.send(greeting);
-});
+import { config } from 'dotenv';
+config();
+import { app } from './app/core/app';
+import './app/routes';
 
 const port = process.env.port || 3333;
 const server = app.listen(port, () => {
