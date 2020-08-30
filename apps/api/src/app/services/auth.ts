@@ -2,15 +2,26 @@ import { Request, Response } from 'express';
 import { randomBytes } from 'crypto';
 import { asyncClient } from '../core/redis';
 
-export async function createSession(accessToken: string, refreshToken: string, res: Response) {
+export async function createSession(
+  accessToken: string,
+  refreshToken: string,
+  res: Response
+) {
   const sessionToken = randomBytes(64).toString('hex');
-  await asyncClient('hset', `session:${sessionToken}`, 'accessToken', accessToken, 'refreshToken', refreshToken);
+  await asyncClient(
+    'hset',
+    `session:${sessionToken}`,
+    'accessToken',
+    accessToken,
+    'refreshToken',
+    refreshToken
+  );
   setSessionToken(sessionToken, res);
 }
 
 export async function hasSession(req: Request): Promise<boolean> {
   try {
-    return !!await getSpotifyAccessToken(req);
+    return !!(await getSpotifyAccessToken(req));
   } catch (e) {
     return false;
   }
@@ -33,10 +44,9 @@ export async function refreshTokenBySession(sessionId: string) {
 }
 
 function setSessionToken(token: string, res: Response): void {
-  console.log(token);
   res.cookie('session', token, {
     httpOnly: true,
-    maxAge: 1000 * 60 * 60 * 24 * 7,  // 7 days
+    maxAge: 60 * 59, // 59 minutes
     sameSite: true,
   });
 }
@@ -45,4 +55,3 @@ export function getSessionToken(req: Request): string | undefined {
   const { session } = req.cookies;
   return session;
 }
-
