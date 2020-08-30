@@ -1,13 +1,10 @@
 # DiscoverDaily
 
 ## Deploy
-
-### API
+```bash
+$ ./scripts/deploy.sh api
+$ ./scripts/deploy.sh discover-daily
 ```
-docker build -t josiahdahl/discover-daily-api:latest -f caprover/api/Dockerfile .
-docker push josiahdahl/discover-daily-api:latest
-```
-
 
 ## Generate an application
 
