@@ -1,0 +1,19 @@
+name: Deploy Prod
+on:
+  push:
+    branches:
+      - master
+jobs:
+  install-build:
+    name: Install Dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - id: Checkout
+        uses: actions/checkout@v2
+      - id: Setup node
+        uses: actions/setup-node@v1
+        with:
+          node-version: 14.x
+      - run: yarn install --frozen-lockfile
+      - run: yarn nx build --prod api
+      - run: yarn nx build --prod discover-daily
