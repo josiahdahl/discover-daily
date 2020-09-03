@@ -1,10 +1,5 @@
-FROM node:12.18.1-alpine AS builder
-WORKDIR /usr/src/app
-COPY package.json yarn.lock ./
-RUN yarn install --force-lockfile
-COPY . .
-RUN yarn nx build --prod discover-daily
-
+# Build the Frontend image in CI
 FROM socialengine/nginx-spa:latest
+USER node
 WORKDIR /usr/src/app
-COPY --from=builder /usr/src/app/dist/apps/discover-daily /app
+COPY dist/apps/discover-daily /app

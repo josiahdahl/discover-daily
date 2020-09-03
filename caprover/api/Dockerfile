@@ -1,14 +1,8 @@
-FROM node:12.18.2-alpine AS builder
-WORKDIR /usr/src/app
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
-COPY . .
-RUN yarn nx build --prod api
-
+# Build the API image in CI
 FROM node:12.18.2-alpine
+USER node
 WORKDIR /usr/src/app
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile --production
-COPY --from=builder /usr/src/app/dist/apps/api/ ./
+COPY node_modules/ .
+COPY dist/apps/api/ .
 EXPOSE 3333
 CMD ["node", "/usr/src/app/main.js"]

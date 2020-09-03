@@ -4,7 +4,7 @@ on:
     branches:
       - master
 jobs:
-  install-build:
+  deploy:
     name: Install Dependencies
     runs-on: ubuntu-latest
     steps:
@@ -12,6 +12,69 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 14.x
+      # Cache Flow: https://stackoverflow.com/a/62244232
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Cache yarn cache
+        uses: actions/cache@v2
+        id: cache-yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Cache node_modules
+        id: cache-node-modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-nodemodules-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-nodemodules-
+      - run: yarn install --frozen-lockfile --prefer-offline
+        if: |
+          steps.cache-yarn-cache.outputs.cache-hit != 'true' ||
+          steps.cache-node-modules.outputs.cache-hit != 'true'
       - run: yarn install --frozen-lockfile
+      # TODO: Build dynamically based on what was changed
       - run: yarn nx build --prod api
       - run: yarn nx build --prod discover-daily
+      - name: Prune node_modules
+        run: yarn install --production --ignore-scripts --prefer-offline
+      - name: Build API Dockerfile and push
+        id: api_image
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          repository: discoverdaily/api
+          tags: lastest
+          tag_with_sha: true
+          dockerfile: caprover/api/Dockerfile
+      - name: Build Frontend Dockerfile and push
+        id: frontend_image
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          repository: discoverdaily/frontend
+          tags: lastest
+          tag_with_sha: true
+          dockerfile: caprover/discover-daily/Dockerfile
+      - name: Install Caprover
+        run: |
+          yarn global add caprover
+          echo "::add-path::$(yarn global bin)"
+      - name: Caprover Deploy
+        env:
+          CAPROVER_URL: captain.caprover.josiahdahl.com
+          CAPROVER_PASSWORD: ${{ secrets.CAPROVER_PASSWORD }}
+          CAPROVER_NAME: captain-01
+          API_APP_NAME: discover-daily-api
+          FRONTEND_APP_NAME: discover-daily
+        run: |
+          caprover deploy -i discoverdaily/api:latest -n "${CAPROVER_NAME}" -a "${API_APP_NAME}"
+          caprover deploy -i discoverdaily/frontend:latest -n "${CAPROVER_NAME}" -a "${FRONTEND_APP_NAME}"
+
+
