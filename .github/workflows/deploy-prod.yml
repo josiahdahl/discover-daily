@@ -4,11 +4,16 @@ on:
     branches:
       - master
 jobs:
-  build:
-    name: Build
+  build_affected:
+    name: Build Affected
     runs-on: ubuntu-latest
+    outputs:
+      affected_apps: ${{ steps.affected_apps.outputs.apps }}
     steps:
+      # Checkout to depth 2 so we can see what changed
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
       - uses: actions/setup-node@v1
         with:
           node-version: 14.x
@@ -34,85 +39,96 @@ jobs:
             ${{ runner.os }}-nodemodules-
       - run: yarn install --frozen-lockfile --prefer-offline
         if: |
-          steps.cache-yarn-cache.outputs.cache-hit != 'true' ||
-          steps.cache-node-modules.outputs.cache-hit != 'true'
+          steps.cache-yarn-cache.outputs.cache-hit == 'true' ||
+          steps.cache-node-modules.outputs.cache-hit == 'true'
       - run: yarn install --frozen-lockfile
-      # TODO: Build dynamically based on what was changed
-      - run: yarn nx build --prod api
-      - run: yarn nx build --prod discover-daily
+      # Compare the current branch to the parent of the current branch. In a merge commit this should compare the
+      # first commit before the merge commit and the current state of the branch, giving us what changed.
+      - run: yarn nx affected:build --base=HEAD^
       - name: Store build artifacts
         uses: actions/upload-artifact@v2
         with:
           name: apps
           path: dist/apps
+      - name: Output affected
+        id: affected_apps
+        run: echo "::set-output name=apps::$(yarn nx affected:apps --base=HEAD^ --plain)"
 
-  deploy:
-    name: Deploy Changed
+  deploy_frontend:
     runs-on: ubuntu-latest
-    needs: build
+    needs: build_affected
+    name: Deploy Frontend
+    if: contains(needs.build_affected.outputs.affected_apps, 'discover-daily')
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 14.x
-      - name: Get yarn cache directory path
-        id: yarn-cache-dir-path
-        run: echo "::set-output name=dir::$(yarn cache dir)"
-      - name: Cache yarn cache for deploy
-        uses: actions/cache@v2
-        id: cache-yarn-cache
-        with:
-          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-          key: ${{ runner.os }}-yarn-deploy-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-yarn-prod-
-      - name: Cache node_modules for deploy
-        id: cache-node-modules
-        uses: actions/cache@v2
-        with:
-          path: node_modules
-          key: ${{ runner.os }}-nodemodules-deploy-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-nodemodules-prod-
-      - name: Install deploy dependencies only
-        run: yarn install --production --ignore-scripts --prefer-offline
-      - name: Restore  built apps
-        uses: actions/download-artifact@v2
-        with:
-          name: apps
-          path: dist/apps
-        # TODO: Only build based on the apps found
-      - name: Build API Dockerfile and push
-        id: api_image
-        uses: docker/build-push-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-          repository: discoverdaily/api
-          tags: latest
-          tag_with_sha: true
-          dockerfile: caprover/api/Dockerfile
-      - name: Build Frontend Dockerfile and push
-        id: frontend_image
-        uses: docker/build-push-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-          repository: discoverdaily/frontend
-          tags: latest
-          tag_with_sha: true
-          dockerfile: caprover/discover-daily/Dockerfile
-      - name: Install Caprover
-        run: |
-          yarn global add caprover
-          echo "::add-path::$(yarn global bin)"
-      - name: Caprover Deploy
-        env:
-          CAPROVER_URL: captain.caprover.josiahdahl.com
-          CAPROVER_PASSWORD: ${{ secrets.CAPROVER_PASSWORD }}
-          CAPROVER_NAME: captain-01
-          API_APP_NAME: discover-daily-api
-          FRONTEND_APP_NAME: discover-daily
-        run: |
-          caprover deploy -i discoverdaily/api:latest -n "${CAPROVER_NAME}" -a "${API_APP_NAME}"
-          caprover deploy -i discoverdaily/frontend:latest -n "${CAPROVER_NAME}" -a "${FRONTEND_APP_NAME}"
+      - run: echo "Deploying Frontend"
+
+#  deploy:
+#    name: Deploy Changed
+#    runs-on: ubuntu-latest
+#    needs: build
+#    steps:
+#      - uses: actions/checkout@v2
+#      - uses: actions/setup-node@v1
+#        with:
+#          node-version: 14.x
+#      - name: Get yarn cache directory path
+#        id: yarn-cache-dir-path
+#        run: echo "::set-output name=dir::$(yarn cache dir)"
+#      - name: Cache yarn cache for deploy
+#        uses: actions/cache@v2
+#        id: cache-yarn-cache
+#        with:
+#          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+#          key: ${{ runner.os }}-yarn-deploy-${{ hashFiles('**/yarn.lock') }}
+#          restore-keys: |
+#            ${{ runner.os }}-yarn-prod-
+#      - name: Cache node_modules for deploy
+#        id: cache-node-modules
+#        uses: actions/cache@v2
+#        with:
+#          path: node_modules
+#          key: ${{ runner.os }}-nodemodules-deploy-${{ hashFiles('**/yarn.lock') }}
+#          restore-keys: |
+#            ${{ runner.os }}-nodemodules-prod-
+#      - name: Install deploy dependencies only
+#        run: yarn install --production --ignore-scripts --prefer-offline
+#      - name: Restore  built apps
+#        uses: actions/download-artifact@v2
+#        with:
+#          name: apps
+#          path: dist/apps
+#        # TODO: Only build based on the apps found
+#      - name: Build API Dockerfile and push
+#        id: api_image
+#        uses: docker/build-push-action@v1
+#        with:
+#          username: ${{ secrets.DOCKERHUB_USERNAME }}
+#          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+#          repository: discoverdaily/api
+#          tags: latest
+#          tag_with_sha: true
+#          dockerfile: caprover/api/Dockerfile
+#      - name: Build Frontend Dockerfile and push
+#        id: frontend_image
+#        uses: docker/build-push-action@v1
+#        with:
+#          username: ${{ secrets.DOCKERHUB_USERNAME }}
+#          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+#          repository: discoverdaily/frontend
+#          tags: latest
+#          tag_with_sha: true
+#          dockerfile: caprover/discover-daily/Dockerfile
+#      - name: Install Caprover
+#        run: |
+#          yarn global add caprover
+#          echo "::add-path::$(yarn global bin)"
+#      - name: Caprover Deploy
+#        env:
+#          CAPROVER_URL: captain.caprover.josiahdahl.com
+#          CAPROVER_PASSWORD: ${{ secrets.CAPROVER_PASSWORD }}
+#          CAPROVER_NAME: captain-01
+#          API_APP_NAME: discover-daily-api
+#          FRONTEND_APP_NAME: discover-daily
+#        run: |
+#          caprover deploy -i discoverdaily/api:latest -n "${CAPROVER_NAME}" -a "${API_APP_NAME}"
+#          caprover deploy -i discoverdaily/frontend:latest -n "${CAPROVER_NAME}" -a "${FRONTEND_APP_NAME}"
