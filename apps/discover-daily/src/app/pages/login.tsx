@@ -5,15 +5,17 @@ import { useHistory } from 'react-router-dom';
 
 export function Login() {
   const { isAuthed } = useContext(AuthContext);
-  const [error, setError] = useState<string>(undefined);
+  const [error] = useState<string>(undefined);
   const history = useHistory();
   useEffect(() => {
     if (isAuthed) {
-      history.push('/')
+      history.push('/');
     }
-  }, [isAuthed]);
+  }, [isAuthed, history]);
 
-  return <div>
-    {error ? <p>There was an error: {error}</p> : <p>Logging in...</p>}
-  </div>;
+  return (
+    <div>
+      {error ? <p>There was an error: {error}</p> : <p>Logging in...</p>}
+    </div>
+  );
 }

@@ -1,6 +1,6 @@
 import { app } from '../core/app';
 import { getSpotifyAccessToken } from '../services/auth';
-import { spotify } from '../services/spotify';
+import { spotify } from '@discover-daily/integrations/spotify';
 
 app.get('/api/new-releases', async (req, res) => {
   const token = await getSpotifyAccessToken(req);
