@@ -11,7 +11,9 @@ function defaultValue() {
   return { isAuthed: false, isHydrated: false };
 }
 
-export const AuthContext = React.createContext<AuthContextValue>(defaultValue());
+export const AuthContext = React.createContext<AuthContextValue>(
+  defaultValue()
+);
 
 export const AuthContextProvider: FunctionComponent = ({ children }) => {
   const [isAuthed, setIsAuthed] = useState(false);
@@ -21,15 +23,16 @@ export const AuthContextProvider: FunctionComponent = ({ children }) => {
     setIsAuthed(await apiClient.hasSession());
   }
 
-  function hydrate() {
+  useEffect(() => {
     checkAuth().then(() => {
       setIsHydrated(true);
     });
-  }
-
-  useEffect(() => {
-    hydrate();
   }, []);
 
-  return <AuthContext.Provider value={{ isAuthed, isHydrated }} children={children}/>;
+  return (
+    <AuthContext.Provider
+      value={{ isAuthed, isHydrated }}
+      children={children}
+    />
+  );
 };

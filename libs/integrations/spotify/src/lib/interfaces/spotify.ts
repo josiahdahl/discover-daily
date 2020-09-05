@@ -4,7 +4,7 @@ export interface PagingObject<T> {
   limit: number;
   next: string;
   offset: number;
-  previous: string | null,
+  previous: string | null;
   total: number;
 }
 

@@ -23,20 +23,23 @@
   },
   "projects": {
     "discover-daily": {
-      "tags": []
+      "tags": ["scope:discover-daily"]
     },
     "discover-daily-e2e": {
       "tags": [],
       "implicitDependencies": ["discover-daily"]
     },
     "api": {
-      "tags": []
+      "tags": ["scope:api"]
     },
     "api-interfaces": {
-      "tags": []
+      "tags": ["scope:shared", "type:util"]
     },
     "api-client": {
-      "tags": []
+      "tags": ["scope:shared", "type:util"]
+    },
+    "integrations-spotify": {
+      "tags": ["scope:backend:shared", "type:util"]
     }
   }
 }
