@@ -44,6 +44,10 @@ jobs:
     needs: install
     steps:
         - uses: actions/checkout@v2
+          with:
+            ref: ${{ github.event.pull_request.head.ref }}
+            fetch-depth: 0
+        - run: git fetch --no-tags --prune --depth=5 origin master
         - uses: actions/setup-node@v1
           with:
             node-version: 14.x
@@ -76,7 +80,7 @@ jobs:
             steps.cache-yarn-cache.outputs.cache-hit != 'true' &&
             steps.cache-node-modules.outputs.cache-hit != 'true'
         # --base=master and --head=HEAD are the default arguments, but keeping here for posterity
-        - run: yarn nx affected:test --base=master --head=HEAD
+        - run: yarn nx affected:test --base=origin/master --head=HEAD
 
   lint:
     runs-on: ubuntu-latest
