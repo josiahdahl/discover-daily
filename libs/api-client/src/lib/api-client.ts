@@ -1,5 +1,5 @@
 import Axios, { AxiosInstance } from 'axios';
-import { SimpleAlbum } from '../../../integrations/spotify/src/lib/interfaces/spotify';
+import { SimpleAlbum } from '@discover-daily/integrations/spotify';
 
 export class ApiClient {
   private readonly http: AxiosInstance;
