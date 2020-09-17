@@ -11,7 +11,9 @@
     },
     "tslint.json": "*",
     "nx.json": "*",
-    "tsconfig.base.json": "*"
+    "tsconfig.base.json": "*",
+    "caprover/api/Dockerfile": ["api"],
+    "caprover/discover-daily/Dockerfile": ["discover-daily"]
   },
   "tasksRunnerOptions": {
     "default": {
