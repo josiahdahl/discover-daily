@@ -75,7 +75,6 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/discover-daily/jest.config.js",
-            "tsConfig": "apps/discover-daily/tsconfig.spec.json",
             "passWithNoTests": true
           }
         }
@@ -159,7 +158,6 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/api/jest.config.js",
-            "tsConfig": "apps/api/tsconfig.spec.json",
             "passWithNoTests": true
           }
         }
@@ -186,7 +184,6 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/api-interfaces/jest.config.js",
-            "tsConfig": "libs/api-interfaces/tsconfig.spec.json",
             "passWithNoTests": true
           }
         }
@@ -213,7 +210,6 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/api-client/jest.config.js",
-            "tsConfig": "libs/api-client/tsconfig.spec.json",
             "passWithNoTests": true
           }
         }
@@ -240,7 +236,6 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/integrations/spotify/jest.config.js",
-            "tsConfig": "libs/integrations/spotify/tsconfig.spec.json",
             "passWithNoTests": true
           }
         }
