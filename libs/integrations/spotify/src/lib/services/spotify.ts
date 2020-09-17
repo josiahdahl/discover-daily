@@ -1,9 +1,5 @@
 import Axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
-import {
-  AlbumType,
-  NewReleasesDto,
-  SimpleAlbum,
-} from '@discover-daily/integrations/spotify';
+import { AlbumType, NewReleasesDto, SimpleAlbum } from '../interfaces/spotify';
 
 function isAxiosError(res: any): res is AxiosError {
   return (res as AxiosError).isAxiosError;
