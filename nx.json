@@ -42,6 +42,9 @@
     },
     "integrations-spotify": {
       "tags": ["scope:backend:shared", "type:util"]
+    },
+    "ui": {
+      "tags": []
     }
   }
 }

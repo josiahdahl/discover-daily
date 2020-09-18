@@ -1,5 +1,9 @@
 import { app } from '../core/app';
-import { hasSession } from '../services/auth';
+import {
+  deleteTokensBySession,
+  getSessionToken,
+  hasSession,
+} from '../services/auth';
 import { randomBytes } from 'crypto';
 import { asyncClient } from '../core/redis';
 
@@ -19,6 +23,18 @@ app.get('/api/auth/login', async (req, res) => {
 app.get('/api/auth/session', async (req, res) => {
   if (await hasSession(req)) {
     res.status(200);
+  } else {
+    res.status(404);
+  }
+  res.send();
+});
+
+app.post('/api/auth/logout', async (req, res) => {
+  const sessionId = await getSessionToken(req);
+  if (sessionId) {
+    await deleteTokensBySession(sessionId);
+    res.cookie('session', null, { maxAge: 0 });
+    res.status(204);
   } else {
     res.status(404);
   }

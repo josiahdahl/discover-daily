@@ -43,10 +43,14 @@ export async function refreshTokenBySession(sessionId: string) {
   return asyncClient('hget', `session:${sessionId}`, 'refreshToken');
 }
 
+export async function deleteTokensBySession(sessionId: string) {
+  return asyncClient('del', `session:${sessionId}`);
+}
+
 function setSessionToken(token: string, res: Response): void {
   res.cookie('session', token, {
     httpOnly: true,
-    maxAge: 60 * 59, // 59 minutes
+    maxAge: 60 * 59 * 1000, // 59 minutes
     sameSite: true,
   });
 }
