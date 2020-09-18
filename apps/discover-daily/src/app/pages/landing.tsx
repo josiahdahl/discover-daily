@@ -1,30 +1,30 @@
 import * as React from 'react';
-import { Box, Button, Flex, Heading, Stack, Text } from '@chakra-ui/core';
-import { FC } from 'react';
+import { Button, Heading, Image, Stack, Text } from '@chakra-ui/core';
 import { apiClient } from '../services/api-client';
-
-const Layout: FC = (props) => (
-  <Flex direction="column" justify="center" align="center" h="100vh">
-    {props.children}
-  </Flex>
-);
+import { CenteredFullPage } from '../components/Layout';
 
 export const Landing = () => {
   return (
-    <Layout>
+    <CenteredFullPage bg="orange.100">
       <Stack spacing={16} textAlign="center">
-        <Stack>
-          <Heading as="h1" size="2xl">
-            Discover Daily
-          </Heading>
-          <Text color="gray.500" fontSize="lg">
-            Escape the algorithm and find new music, daily
-          </Text>
-        </Stack>
-        <Button onClick={() => (window.location.href = apiClient.loginUrl)}>
+        <Image src="/assets/DiscoverDaily.svg" />
+        <Text color="orange.700" fontSize="lg">
+          Escape the algorithm.
+        </Text>
+        <Button
+          bg="green.600"
+          color="white"
+          py={6}
+          textTransform="uppercase"
+          letterSpacing={2}
+          fontWeight="light"
+          onClick={() => (window.location.href = apiClient.loginUrl)}
+          boxShadow="lg"
+          background="linear-gradient(25deg, #9e1f63 30%, #262262 80%)"
+        >
           Login with Spotify
         </Button>
       </Stack>
-    </Layout>
+    </CenteredFullPage>
   );
 };

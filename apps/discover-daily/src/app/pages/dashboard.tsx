@@ -36,10 +36,10 @@ const Releases = (props: { releases: SimpleAlbum[] }) => (
       >
         <Image src={release.images[0].url} alt={`${release.name} album art`} />
         <Flex p={2} direction="column" justify="between" flexGrow={1}>
-          <Box flexGrow={1} mb={3}>
+          <Flex flexGrow={1} mb={3} align="center">
             <Heading fontSize={{ md: 'sm', xl: 'md' }}>{release.name}</Heading>
             <Text fontSize="sm">{release.artists[0].name}</Text>
-          </Box>
+          </Flex>
         </Flex>
         <Link
           href={release.external_urls.spotify}
@@ -60,13 +60,14 @@ const Releases = (props: { releases: SimpleAlbum[] }) => (
 );
 
 export const Dashboard = () => {
+  const [loadingState, setLoadingState] = useState<string>('loading');
   const [newReleases, setNewReleases] = useState<SimpleAlbum[]>([]);
-
   async function fetchNewReleases() {
     try {
       setNewReleases(await apiClient.newReleases());
+      setLoadingState('loaded');
     } catch (e) {
-      setNewReleases([]);
+      setLoadingState('error');
     }
   }
 
@@ -78,11 +79,12 @@ export const Dashboard = () => {
     <Box as="main" p={2}>
       <Flex mb={4} justify="space-between">
         <Heading as="h1">Discover Daily</Heading>
-        <Button variant="link">Logout</Button>
+        <Link href="/logout">Logout</Link>
       </Flex>
-
-      {newReleases.length === 0 ? (
-        <p>Fetching new releases...</p>
+      {loadingState === 'loading' ? (
+        <Text>Fetching new releases...</Text>
+      ) : loadingState === 'error' ? (
+        <Text>Failed to load albums.</Text>
       ) : (
         <Releases releases={newReleases} />
       )}

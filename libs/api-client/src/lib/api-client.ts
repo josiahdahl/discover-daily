@@ -25,4 +25,8 @@ export class ApiClient {
     const { data } = await this.http.get('/api/new-releases');
     return data;
   }
+
+  logout() {
+    return this.http.post('/api/auth/logout');
+  }
 }

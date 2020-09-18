@@ -6,6 +6,7 @@ import { Landing } from './pages/landing';
 import { Login } from './pages/login';
 import { CSSReset, ThemeProvider } from '@chakra-ui/core';
 import { Theme } from '@discover-daily/ui';
+import { Logout } from './pages/logout';
 
 export const App = () => {
   const { isAuthed, isHydrated } = useContext(AuthContext);
@@ -18,6 +19,9 @@ export const App = () => {
         </Route>
         <Route path="/login">
           <Login />
+        </Route>
+        <Route path="/logout">
+          <Logout />
         </Route>
         <Route path="/">{isAuthed ? <Dashboard /> : <Landing />}</Route>
       </Switch>
