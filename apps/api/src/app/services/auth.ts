@@ -46,7 +46,7 @@ export async function refreshTokenBySession(sessionId: string) {
 function setSessionToken(token: string, res: Response): void {
   res.cookie('session', token, {
     httpOnly: true,
-    maxAge: 60 * 59, // 59 minutes
+    maxAge: 60 * 59 * 1000, // 59 minutes
     sameSite: true,
   });
 }

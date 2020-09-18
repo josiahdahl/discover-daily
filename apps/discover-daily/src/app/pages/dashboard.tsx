@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { SimpleAlbum } from '@discover-daily/integrations/spotify';
 import { apiClient } from '../services/api-client';
+import { Box, Heading } from '@chakra-ui/core';
 
 const Releases = (props: { releases: SimpleAlbum[] }) => (
   <section className="grid grid-cols-2 md:grid-cols-4 xl:grid-cols-8 gap-1 md:gap-3">
@@ -50,13 +51,13 @@ export const Dashboard = () => {
   }, []);
 
   return (
-    <main className="p-2">
-      <h1 className="text-4xl font-bold mb-4">Discover Daily</h1>
+    <Box as="main">
+      <Heading as="h1">Discover Daily</Heading>
       {newReleases.length === 0 ? (
         <p>Fetching new releases...</p>
       ) : (
         <Releases releases={newReleases} />
       )}
-    </main>
+    </Box>
   );
 };

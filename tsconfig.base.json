@@ -20,7 +20,8 @@
       "@discover-daily/api-client": ["libs/api-client/src/index.ts"],
       "@discover-daily/integrations/spotify": [
         "libs/integrations/spotify/src/index.ts"
-      ]
+      ],
+      "@discover-daily/ui": ["libs/ui/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

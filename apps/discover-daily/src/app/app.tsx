@@ -4,23 +4,25 @@ import { AuthContext } from './contexts/auth.context';
 import { Dashboard } from './pages/dashboard';
 import { Landing } from './pages/landing';
 import { Login } from './pages/login';
+import { CSSReset, ThemeProvider } from '@chakra-ui/core';
+import { Theme } from '@discover-daily/ui';
 
 export const App = () => {
   const { isAuthed, isHydrated } = useContext(AuthContext);
-  return (isHydrated ?
+  return isHydrated ? (
+    <ThemeProvider theme={Theme}>
+      <CSSReset />
       <Switch>
         <Route path="/login/success">
-          <Login/>
+          <Login />
         </Route>
         <Route path="/login">
-          <Login/>
+          <Login />
         </Route>
-        <Route path="/">
-          {isAuthed ? <Dashboard/> : <Landing/>}
-        </Route>
+        <Route path="/">{isAuthed ? <Dashboard /> : <Landing />}</Route>
       </Switch>
-      : null
-  );
+    </ThemeProvider>
+  ) : null;
 };
 
 export default App;
