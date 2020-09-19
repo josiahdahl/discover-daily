@@ -36,10 +36,10 @@ const Releases = (props: { releases: SimpleAlbum[] }) => (
       >
         <Image src={release.images[0].url} alt={`${release.name} album art`} />
         <Flex p={2} direction="column" justify="between" flexGrow={1}>
-          <Flex flexGrow={1} mb={3} align="center">
+          <Box flexGrow={1} mb={3}>
             <Heading fontSize={{ md: 'sm', xl: 'md' }}>{release.name}</Heading>
             <Text fontSize="sm">{release.artists[0].name}</Text>
-          </Flex>
+          </Box>
         </Flex>
         <Link
           href={release.external_urls.spotify}
