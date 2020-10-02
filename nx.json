@@ -34,9 +34,6 @@
     "api": {
       "tags": ["scope:api"]
     },
-    "api-interfaces": {
-      "tags": ["scope:shared", "type:util"]
-    },
     "api-client": {
       "tags": ["scope:shared", "type:util"]
     },

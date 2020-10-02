@@ -16,7 +16,6 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@discover-daily/api-interfaces": ["libs/api-interfaces/src/index.ts"],
       "@discover-daily/api-client": ["libs/api-client/src/index.ts"],
       "@discover-daily/integrations/spotify": [
         "libs/integrations/spotify/src/index.ts"
