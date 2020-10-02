@@ -30,12 +30,17 @@ const Releases = (props: { releases: SimpleAlbum[] }) => (
         as="article"
         borderWidth={1}
         borderRadius={3}
-        boxShadow="md"
         direction="column"
         key={release.id}
       >
         <Image src={release.images[0].url} alt={`${release.name} album art`} />
-        <Flex p={2} direction="column" justify="between" flexGrow={1}>
+        <Flex
+          p={2}
+          direction="column"
+          justify="between"
+          flexGrow={1}
+          bg="gray.100"
+        >
           <Box flexGrow={1} mb={3}>
             <Heading fontSize={{ md: 'sm', xl: 'md' }}>{release.name}</Heading>
             <Text fontSize="sm">{release.artists[0].name}</Text>
@@ -45,12 +50,13 @@ const Releases = (props: { releases: SimpleAlbum[] }) => (
           href={release.external_urls.spotify}
           target="_blank"
           rel="noreferrer"
-          bg="teal.800"
+          bg="purple.500"
           p={2}
           display="block"
           textAlign="center"
           color="white"
           textTransform="uppercase"
+          _hover={{ textDecoration: 'none' }}
         >
           Listen
         </Link>
@@ -76,10 +82,23 @@ export const Dashboard = () => {
   }, []);
 
   return (
-    <Box as="main" p={2}>
-      <Flex mb={4} justify="space-between">
-        <Heading as="h1">Discover Daily</Heading>
-        <Link href="/logout">Logout</Link>
+    <Box as="main" p={2} bg="orange.100" minH="100vh">
+      <Flex mb={4} justify="space-between" alignItems="center">
+        <Heading
+          as="h1"
+          display="flex"
+          flexGrow={1}
+          alignItems="center"
+          color="purple.600"
+          textTransform="uppercase"
+          letterSpacing="tight"
+          fontWeight="bold"
+        >
+          Discover Daily
+        </Heading>
+        <Link href="/logout" px={3}>
+          Logout
+        </Link>
       </Flex>
       {loadingState === 'loading' ? (
         <Text>Fetching new releases...</Text>
