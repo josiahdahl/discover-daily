@@ -6,3 +6,15 @@ services:
     command: redis-server --requirepass discover-daily-dev
     ports:
       - "6379:6379"
+
+  postgres:
+    image: postgres:13.0-alpine
+    environment:
+      POSTGRES_PASSWORD: discover-daily-dev
+    volumes:
+    - data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+volumes:
+  data:
