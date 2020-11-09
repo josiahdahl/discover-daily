@@ -1,2 +1,3 @@
-export * from './lib/interfaces/spotify';
-export * from './lib/services/spotify';
+export * from './lib/spotify.interface';
+export * from './lib/spotify.service';
+export * from './lib/spotify.exceptions';

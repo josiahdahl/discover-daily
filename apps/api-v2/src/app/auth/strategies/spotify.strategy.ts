@@ -42,11 +42,8 @@ export class SpotifyStrategy extends PassportStrategy(Strategy, 'spotify')
     try {
       const user = await this.spotifyAuthService.findOrCreateUser(profile);
       if (!!user) {
-        await this.spotifyTokenService.storeAccessToken(
-          profile.id,
-          accessToken
-        );
-        await this.spotifyTokenService.storeRefreshToken(
+        await this.spotifyTokenService.setAccessToken(profile.id, accessToken);
+        await this.spotifyTokenService.setRefreshToken(
           profile.id,
           refreshToken
         );

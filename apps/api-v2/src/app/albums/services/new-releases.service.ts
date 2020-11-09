@@ -1,15 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { SpotifyTokenService } from '../../spotify/service/spotify-token.service';
-import { spotify } from '@discover-daily/integrations/spotify';
+import { SpotifyApiService } from '../../spotify/service/spotify-api.service';
 
 @Injectable()
 export class NewReleasesService {
-  constructor(private spotifyTokenService: SpotifyTokenService) {}
+  constructor(private spotifyApiService: SpotifyApiService) {}
 
-  async newReleases(spotifyId: string) {
-    const accessToken = await this.spotifyTokenService.getAccessToken(
-      spotifyId
-    );
-    return spotify(accessToken).newReleases();
+  newReleases(spotifyId: string) {
+    return this.spotifyApiService.newReleases(spotifyId);
   }
 }
