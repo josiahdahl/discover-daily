@@ -31,9 +31,6 @@
       "tags": [],
       "implicitDependencies": ["discover-daily"]
     },
-    "api": {
-      "tags": ["scope:api"]
-    },
     "api-client": {
       "tags": ["scope:shared", "type:util"]
     },
@@ -44,7 +41,7 @@
       "tags": []
     },
     "api-v2": {
-      "tags": []
+      "tags": ["scope:api"]
     }
   }
 }
