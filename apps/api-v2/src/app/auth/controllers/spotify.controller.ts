@@ -3,9 +3,11 @@ import { ReqUser } from '../../user/decorators/user.decorator';
 import { UserModel } from '../../user/models/user.model';
 import { SpotifyAuthGuard } from '../guards/spotify-auth.guard';
 import { Response } from 'express';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('auth')
 export class SpotifyController {
+  constructor(private config: ConfigService) {}
   @UseGuards(SpotifyAuthGuard)
   @Get('spotify')
   authenticate() {}
@@ -21,6 +23,6 @@ export class SpotifyController {
     response.cookie('XSRF-TOKEN', request.csrfToken(), {
       maxAge: 60 * 60 * 24 * 30 /* 30 days */,
     });
-    response.redirect(302, 'http://localhost:4200');
+    response.redirect(302, this.config.get('app.clientUri'));
   }
 }
