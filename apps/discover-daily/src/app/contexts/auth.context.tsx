@@ -1,37 +1,27 @@
 import * as React from 'react';
 import { FunctionComponent, useEffect, useState } from 'react';
-import { apiClient } from '../services/api-client';
+import { useXsrfToken } from '../hooks/use-xsrf-token';
 
 export interface AuthContextValue {
-  isAuthed: boolean;
-  isHydrated: boolean;
+  isLoggedIn: boolean;
   logout: () => void;
 }
 
 export const AuthContext = React.createContext<AuthContextValue>(null);
 
 export const AuthContextProvider: FunctionComponent = ({ children }) => {
-  const [isAuthed, setIsAuthed] = useState(false);
-  const [isHydrated, setIsHydrated] = useState(false);
-
-  async function checkAuth() {
-    setIsAuthed(await apiClient.hasSession());
-  }
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const xsrfToken = useXsrfToken();
 
   function logout() {
-    setIsAuthed(false);
+    setIsLoggedIn(false);
   }
 
   useEffect(() => {
-    checkAuth().then(() => {
-      setIsHydrated(true);
-    });
-  }, []);
+    setIsLoggedIn(!!xsrfToken);
+  }, [xsrfToken]);
 
   return (
-    <AuthContext.Provider
-      value={{ isAuthed, isHydrated, logout }}
-      children={children}
-    />
+    <AuthContext.Provider value={{ isLoggedIn, logout }} children={children} />
   );
 };

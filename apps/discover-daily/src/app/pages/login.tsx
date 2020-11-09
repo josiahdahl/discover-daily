@@ -4,14 +4,14 @@ import { AuthContext } from '../contexts/auth.context';
 import { useHistory } from 'react-router-dom';
 
 export function Login() {
-  const { isAuthed } = useContext(AuthContext);
+  const { isLoggedIn } = useContext(AuthContext);
   const [error] = useState<string>(undefined);
   const history = useHistory();
   useEffect(() => {
-    if (isAuthed) {
+    if (isLoggedIn) {
       history.push('/');
     }
-  }, [isAuthed, history]);
+  }, [isLoggedIn, history]);
 
   return (
     <div>

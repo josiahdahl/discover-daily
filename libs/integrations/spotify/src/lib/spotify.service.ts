@@ -1,8 +1,14 @@
 import Axios, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
-import { AlbumType, NewReleasesDto, SimpleAlbum } from '../interfaces/spotify';
+import { AlbumType, NewReleasesDto, SimpleAlbum } from './spotify.interface';
+import { InvalidAccessTokenException } from './spotify.exceptions';
+import { HttpStatus } from '@nestjs/common';
 
 function isAxiosError(res: any): res is AxiosError {
   return (res as AxiosError).isAxiosError;
+}
+
+function isAuthorizationError(res: any) {
+  return isAxiosError(res) && res.response.status === HttpStatus.UNAUTHORIZED;
 }
 
 export interface SpotifyClient {
@@ -28,6 +34,9 @@ async function fetchNewReleases(
     reqs
   );
   const releases = results.reduce<SimpleAlbum[]>((acc, r) => {
+    if (isAuthorizationError(r)) {
+      throw new InvalidAccessTokenException();
+    }
     if (isAxiosError(r)) {
       return acc;
     }

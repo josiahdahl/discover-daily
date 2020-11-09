@@ -9,16 +9,7 @@ export class ApiClient {
   }
 
   get loginUrl() {
-    return `${this.baseURL}/api/auth/login`;
-  }
-
-  async hasSession() {
-    try {
-      const res = await this.http.get('/api/auth/session');
-      return res.status === 200;
-    } catch (e) {
-      return false;
-    }
+    return `${this.baseURL}/api/auth/spotify`;
   }
 
   async newReleases(): Promise<SimpleAlbum[]> {
