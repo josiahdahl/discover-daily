@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { SimpleAlbum } from '@discover-daily/integrations/spotify';
 import { apiClient } from '../services/api-client';
 import {
@@ -12,6 +12,8 @@ import {
   Link,
   Text,
 } from '@chakra-ui/core';
+import { useHistory } from 'react-router-dom';
+import { AuthContext } from '../contexts/auth.context';
 
 const Releases = (props: { releases: SimpleAlbum[] }) => (
   <Grid
@@ -68,12 +70,14 @@ const Releases = (props: { releases: SimpleAlbum[] }) => (
 export const Dashboard = () => {
   const [loadingState, setLoadingState] = useState<string>('loading');
   const [newReleases, setNewReleases] = useState<SimpleAlbum[]>([]);
+  const history = useHistory();
   async function fetchNewReleases() {
-    try {
-      setNewReleases(await apiClient.newReleases());
+    const result = await apiClient.newReleases();
+    if (result.isOk()) {
+      setNewReleases(result.unwrap());
       setLoadingState('loaded');
-    } catch (e) {
-      setLoadingState('error');
+    } else {
+      history.push('/logout');
     }
   }
 

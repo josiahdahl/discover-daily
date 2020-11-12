@@ -1,4 +1,8 @@
-import { Injectable, NestMiddleware } from '@nestjs/common';
+import {
+  Injectable,
+  NestMiddleware,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { UserService } from '../../user/services/user.service';
 import { RequestWithSession } from '../interfaces/request-with-session';
@@ -9,7 +13,9 @@ export class SessionUserMiddleware implements NestMiddleware {
   async use(req: RequestWithSession, res: Response, next: Function) {
     if (req.session.userId) {
       req.user = await this.userService.findById(req.session.userId);
+      next();
+    } else {
+      throw new UnauthorizedException();
     }
-    next();
   }
 }

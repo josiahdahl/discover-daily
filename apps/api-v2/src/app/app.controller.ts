@@ -9,10 +9,4 @@ export class AppController {
   hello() {
     return 'Hello World!';
   }
-
-  @UseGuards(SessionGuard)
-  @Get('private')
-  guarded(@ReqUser() user: UserModel) {
-    return `You made it here, ${user.displayName}`;
-  }
 }

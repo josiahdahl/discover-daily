@@ -11,10 +11,11 @@ export const AuthContext = React.createContext<AuthContextValue>(null);
 
 export const AuthContextProvider: FunctionComponent = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const xsrfToken = useXsrfToken();
+  const [xsrfToken, clearXsrfToken] = useXsrfToken();
 
   function logout() {
     setIsLoggedIn(false);
+    clearXsrfToken();
   }
 
   useEffect(() => {

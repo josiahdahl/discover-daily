@@ -11,6 +11,7 @@ import { UserModule } from './user/user.module';
 import { SessionUserMiddleware } from './auth/middleware/session-user.middleware';
 import { redisConfig } from '../config/redis.config';
 import { AlbumsModule } from './albums/albums.module';
+import { CsurfMiddleware } from './auth/middleware/csurf.middleware';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { AlbumsModule } from './albums/albums.module';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): any {
-    consumer.apply(SessionUserMiddleware).forRoutes('*');
+    consumer.apply(SessionUserMiddleware).exclude('auth/(.*)').forRoutes('*');
+    consumer.apply(CsurfMiddleware).exclude('/auth/logout').forRoutes('*');
   }
 }
