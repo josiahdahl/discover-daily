@@ -9,13 +9,19 @@ import { AuthContext } from '../contexts/auth.context';
 export const Logout = () => {
   const history = useHistory();
   const { logout } = useContext(AuthContext);
+  async function handleLogout() {
+    try {
+      await apiClient.logout();
+    } catch (e) {
+      // we tried :)
+    }
+    logout();
+    setTimeout(() => {
+      history.push('/');
+    }, 1000);
+  }
   useEffect(() => {
-    apiClient.logout().then(() => {
-      logout();
-      setTimeout(() => {
-        history.push('/');
-      }, 1000);
-    });
+    handleLogout();
   }, []);
 
   return (

@@ -12,7 +12,6 @@
     "tslint.json": "*",
     "nx.json": "*",
     "tsconfig.base.json": "*",
-    "caprover/api/Dockerfile": ["api"],
     "caprover/discover-daily/Dockerfile": ["discover-daily"]
   },
   "tasksRunnerOptions": {
@@ -31,9 +30,6 @@
       "tags": [],
       "implicitDependencies": ["discover-daily"]
     },
-    "api": {
-      "tags": ["scope:api"]
-    },
     "api-client": {
       "tags": ["scope:shared", "type:util"]
     },
@@ -44,7 +40,7 @@
       "tags": []
     },
     "api-v2": {
-      "tags": []
+      "tags": ["scope:api"]
     }
   }
 }

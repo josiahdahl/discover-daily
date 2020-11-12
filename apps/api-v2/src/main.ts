@@ -33,7 +33,6 @@ async function bootstrap() {
       saveUninitialized: true,
     })
   );
-  app.use(csurf());
   app.set('trust proxy', 1);
   const port = config.get('app.port');
   await app.listen(port, () => {
