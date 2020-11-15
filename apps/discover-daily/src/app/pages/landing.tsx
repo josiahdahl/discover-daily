@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Button, Heading, Image, Stack, Text } from '@chakra-ui/core';
+import { Button, Image, Stack, Text } from '@chakra-ui/core';
 import { apiClient } from '../services/api-client';
 import { CenteredFullPage } from '../components/Layout';
 
