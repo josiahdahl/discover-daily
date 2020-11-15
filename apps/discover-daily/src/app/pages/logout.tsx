@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useContext, useEffect } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import { CenteredFullPage } from '../components/Layout';
 import { Text } from '@chakra-ui/core';
 import { apiClient } from '../services/api-client';
@@ -9,7 +9,7 @@ import { AuthContext } from '../contexts/auth.context';
 export const Logout = () => {
   const history = useHistory();
   const { logout } = useContext(AuthContext);
-  async function handleLogout() {
+  const handleLogout = useCallback(async () => {
     try {
       await apiClient.logout();
     } catch (e) {
@@ -19,10 +19,11 @@ export const Logout = () => {
     setTimeout(() => {
       history.push('/');
     }, 1000);
-  }
+  }, [history, logout]);
+
   useEffect(() => {
     handleLogout();
-  }, []);
+  }, [handleLogout]);
 
   return (
     <CenteredFullPage>

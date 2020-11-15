@@ -1,19 +1,9 @@
 import * as React from 'react';
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { SimpleAlbum } from '@discover-daily/integrations/spotify';
 import { apiClient } from '../services/api-client';
-import {
-  Box,
-  Button,
-  Flex,
-  Grid,
-  Heading,
-  Image,
-  Link,
-  Text,
-} from '@chakra-ui/core';
+import { Box, Flex, Grid, Heading, Image, Link, Text } from '@chakra-ui/core';
 import { useHistory } from 'react-router-dom';
-import { AuthContext } from '../contexts/auth.context';
 
 const Releases = (props: { releases: SimpleAlbum[] }) => (
   <Grid
@@ -67,11 +57,11 @@ const Releases = (props: { releases: SimpleAlbum[] }) => (
   </Grid>
 );
 
-export const Dashboard = () => {
+export function Dashboard() {
   const [loadingState, setLoadingState] = useState<string>('loading');
   const [newReleases, setNewReleases] = useState<SimpleAlbum[]>([]);
   const history = useHistory();
-  async function fetchNewReleases() {
+  const fetchNewReleases = useCallback(async () => {
     const result = await apiClient.newReleases();
     if (result.isOk()) {
       setNewReleases(result.unwrap());
@@ -79,11 +69,11 @@ export const Dashboard = () => {
     } else {
       history.push('/logout');
     }
-  }
+  }, [history]);
 
   useEffect(() => {
     fetchNewReleases();
-  }, []);
+  }, [fetchNewReleases]);
 
   return (
     <Box as="main" p={2} bg="orange.100" minH="100vh">
@@ -113,4 +103,4 @@ export const Dashboard = () => {
       )}
     </Box>
   );
-};
+}

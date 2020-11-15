@@ -1,9 +1,18 @@
+import HoneycombBeeline from 'honeycomb-beeline';
+import { config } from 'dotenv';
+config();
+const honeycombConfig = {
+  writeKey: process.env.HONEYCOMB_WRITEKEY,
+  dataset: process.env.HONEYCOMB_DATASET || 'discover-daily',
+  serviceName: process.env.HONEYCOMB_SERVICENAME || 'discover-daily-api-v2',
+};
+if (honeycombConfig.writeKey) {
+  HoneycombBeeline(honeycombConfig);
+}
 import { Logger } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import * as helmet from 'helmet';
-import * as csurf from 'csurf';
 const session = require('express-session');
-import Redis from 'ioredis';
 import connectRedis from 'connect-redis';
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
