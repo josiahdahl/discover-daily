@@ -38,7 +38,7 @@
     "@nestjs/passport": "^7.1.0",
     "@nestjs/platform-express": "^7.0.0",
     "@willsoto/nestjs-objection": "^4.0.2",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "body-parser": "^1.19.0",
     "connect-redis": "^5.0.0",
     "cookie": "^0.4.1",
