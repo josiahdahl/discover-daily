@@ -36,7 +36,7 @@ async function bootstrap() {
       secret: config.get('app.sessionSecretKey'),
       cookie: {
         secure: environment.production,
-        maxAge: 60 * 60 * 24 * 30 /* 30 days */,
+        maxAge: 1000 * 60 * 60 * 24 * 30 /* 30 days */,
       },
       resave: true,
       saveUninitialized: true,

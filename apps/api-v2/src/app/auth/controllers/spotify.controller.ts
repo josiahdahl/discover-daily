@@ -21,7 +21,7 @@ export class SpotifyController {
   ) {
     request.session.userId = user.id;
     response.cookie('XSRF-TOKEN', request.csrfToken(), {
-      maxAge: 60 * 60 * 24 * 30 /* 30 days */,
+      maxAge: 1000 * 60 * 60 * 24 * 30 /* 30 days */,
     });
     response.redirect(302, this.config.get('app.clientUri'));
   }
