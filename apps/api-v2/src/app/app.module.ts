@@ -28,6 +28,6 @@ import { CsurfMiddleware } from './auth/middleware/csurf.middleware';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer): any {
     consumer.apply(SessionUserMiddleware).exclude('auth/(.*)').forRoutes('*');
-    consumer.apply(CsurfMiddleware).exclude('/auth/logout').forRoutes('*');
+    consumer.apply(CsurfMiddleware).exclude('auth/logout').forRoutes('*');
   }
 }
