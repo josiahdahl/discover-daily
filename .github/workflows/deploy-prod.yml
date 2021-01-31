@@ -82,7 +82,7 @@ jobs:
       - name: Install Caprover
         run: |
           yarn global add caprover
-          echo "::add-path::$(yarn global bin)"
+          echo "$(yarn global bin)" >> $GITHUB_PATH
       - name: Caprover Deploy
         env:
           CAPROVER_URL: captain.caprover.josiahdahl.com
@@ -138,7 +138,7 @@ jobs:
       - name: Install Caprover
         run: |
           yarn global add caprover
-          echo "::add-path::$(yarn global bin)"
+          echo "$(yarn global bin)" >> $GITHUB_PATH
       - name: Caprover Deploy
         env:
           CAPROVER_URL: captain.caprover.josiahdahl.com
