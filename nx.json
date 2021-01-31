@@ -12,7 +12,9 @@
     "tslint.json": "*",
     "nx.json": "*",
     "tsconfig.base.json": "*",
-    "caprover/discover-daily/Dockerfile": ["discover-daily"]
+    "caprover/discover-daily/Dockerfile": ["discover-daily"],
+    ".github/workflows/ci.yml": "*",
+    ".github/workflows/deploy-prod.yml": "*"
   },
   "tasksRunnerOptions": {
     "default": {
