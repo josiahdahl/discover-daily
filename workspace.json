@@ -1,6 +1,93 @@
 {
   "version": 1,
   "projects": {
+    "api-client": {
+      "root": "libs/api-client",
+      "sourceRoot": "libs/api-client/src",
+      "projectType": "library",
+      "schematics": {},
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/api-client/**/*.ts",
+              "libs/api-client/**/*.spec.ts",
+              "libs/api-client/**/*.spec.tsx",
+              "libs/api-client/**/*.spec.js",
+              "libs/api-client/**/*.spec.jsx",
+              "libs/api-client/**/*.d.ts"
+            ]
+          },
+          "outputs": ["{options.outputFile}"]
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/api-client/jest.config.js",
+            "passWithNoTests": true
+          },
+          "outputs": ["coverage/libs/api-client"]
+        }
+      }
+    },
+    "api-v2": {
+      "root": "apps/api-v2",
+      "sourceRoot": "apps/api-v2/src",
+      "projectType": "application",
+      "prefix": "api-v2",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@nrwl/node:build",
+          "options": {
+            "outputPath": "dist/apps/api-v2",
+            "main": "apps/api-v2/src/main.ts",
+            "tsConfig": "apps/api-v2/tsconfig.app.json",
+            "assets": ["apps/api-v2/src/assets", "apps/api-v2/src/migrations"]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/api-v2/src/environments/environment.ts",
+                  "with": "apps/api-v2/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          },
+          "outputs": ["{options.outputPath}"]
+        },
+        "serve": {
+          "builder": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "api-v2:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/api-v2/**/*.ts",
+              "apps/api-v2/**/*.spec.ts",
+              "apps/api-v2/**/*.d.ts"
+            ]
+          },
+          "outputs": ["{options.outputFile}"]
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/api-v2/jest.config.js",
+            "passWithNoTests": true
+          },
+          "outputs": ["coverage/apps/api-v2"]
+        }
+      }
+    },
     "discover-daily": {
       "root": "apps/discover-daily",
       "sourceRoot": "apps/discover-daily/src",
@@ -46,7 +133,8 @@
                 }
               ]
             }
-          }
+          },
+          "outputs": ["{options.outputPath}"]
         },
         "serve": {
           "builder": "@nrwl/web:dev-server",
@@ -61,22 +149,29 @@
           }
         },
         "lint": {
-          "builder": "@nrwl/linter:lint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "linter": "eslint",
-            "tsConfig": [
-              "apps/discover-daily/tsconfig.app.json",
-              "apps/discover-daily/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!apps/discover-daily/**/*"]
-          }
+            "lintFilePatterns": [
+              "apps/discover-daily/**/*.js",
+              "apps/discover-daily/**/*.jsx",
+              "apps/discover-daily/**/*.ts",
+              "apps/discover-daily/**/*.tsx",
+              "apps/discover-daily/**/*.spec.ts",
+              "apps/discover-daily/**/*.spec.tsx",
+              "apps/discover-daily/**/*.spec.js",
+              "apps/discover-daily/**/*.spec.jsx",
+              "apps/discover-daily/**/*.d.ts"
+            ]
+          },
+          "outputs": ["{options.outputFile}"]
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/discover-daily/jest.config.js",
             "passWithNoTests": true
-          }
+          },
+          "outputs": ["coverage/apps/discover-daily"]
         }
       }
     },
@@ -99,38 +194,14 @@
           }
         },
         "lint": {
-          "builder": "@nrwl/linter:lint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "linter": "eslint",
-            "tsConfig": ["apps/discover-daily-e2e/tsconfig.e2e.json"],
-            "exclude": ["**/node_modules/**", "!apps/discover-daily-e2e/**/*"]
-          }
-        }
-      }
-    },
-    "api-client": {
-      "root": "libs/api-client",
-      "sourceRoot": "libs/api-client/src",
-      "projectType": "library",
-      "schematics": {},
-      "architect": {
-        "lint": {
-          "builder": "@nrwl/linter:lint",
-          "options": {
-            "linter": "eslint",
-            "tsConfig": [
-              "libs/api-client/tsconfig.lib.json",
-              "libs/api-client/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/api-client/**/*"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/api-client/jest.config.js",
-            "passWithNoTests": true
-          }
+            "lintFilePatterns": [
+              "apps/discover-daily-e2e/src/**/*.ts",
+              "apps/discover-daily-e2e/src/**/*.js"
+            ]
+          },
+          "outputs": ["{options.outputFile}"]
         }
       }
     },
@@ -141,22 +212,26 @@
       "schematics": {},
       "architect": {
         "lint": {
-          "builder": "@nrwl/linter:lint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "linter": "eslint",
-            "tsConfig": [
-              "libs/integrations/spotify/tsconfig.lib.json",
-              "libs/integrations/spotify/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/integrations/spotify/**/*"]
-          }
+            "lintFilePatterns": [
+              "libs/integrations/spotify/**/*.ts",
+              "libs/integrations/spotify/**/*.spec.ts",
+              "libs/integrations/spotify/**/*.spec.tsx",
+              "libs/integrations/spotify/**/*.spec.js",
+              "libs/integrations/spotify/**/*.spec.jsx",
+              "libs/integrations/spotify/**/*.d.ts"
+            ]
+          },
+          "outputs": ["{options.outputFile}"]
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/integrations/spotify/jest.config.js",
             "passWithNoTests": true
-          }
+          },
+          "outputs": ["coverage/libs/integrations/spotify"]
         }
       }
     },
@@ -167,77 +242,29 @@
       "schematics": {},
       "architect": {
         "lint": {
-          "builder": "@nrwl/linter:lint",
+          "builder": "@nrwl/linter:eslint",
           "options": {
-            "linter": "eslint",
-            "tsConfig": [
-              "libs/ui/tsconfig.lib.json",
-              "libs/ui/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!libs/ui/**/*"]
-          }
+            "lintFilePatterns": [
+              "libs/ui/**/*.js",
+              "libs/ui/**/*.jsx",
+              "libs/ui/**/*.ts",
+              "libs/ui/**/*.tsx",
+              "libs/ui/**/*.spec.ts",
+              "libs/ui/**/*.spec.tsx",
+              "libs/ui/**/*.spec.js",
+              "libs/ui/**/*.spec.jsx",
+              "libs/ui/**/*.d.ts"
+            ]
+          },
+          "outputs": ["{options.outputFile}"]
         },
         "test": {
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "libs/ui/jest.config.js",
             "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "api-v2": {
-      "root": "apps/api-v2",
-      "sourceRoot": "apps/api-v2/src",
-      "projectType": "application",
-      "prefix": "api-v2",
-      "schematics": {},
-      "architect": {
-        "build": {
-          "builder": "@nrwl/node:build",
-          "options": {
-            "outputPath": "dist/apps/api-v2",
-            "main": "apps/api-v2/src/main.ts",
-            "tsConfig": "apps/api-v2/tsconfig.app.json",
-            "assets": ["apps/api-v2/src/assets", "apps/api-v2/src/migrations"]
           },
-          "configurations": {
-            "production": {
-              "optimization": true,
-              "extractLicenses": true,
-              "inspect": false,
-              "fileReplacements": [
-                {
-                  "replace": "apps/api-v2/src/environments/environment.ts",
-                  "with": "apps/api-v2/src/environments/environment.prod.ts"
-                }
-              ]
-            }
-          }
-        },
-        "serve": {
-          "builder": "@nrwl/node:execute",
-          "options": {
-            "buildTarget": "api-v2:build"
-          }
-        },
-        "lint": {
-          "builder": "@nrwl/linter:lint",
-          "options": {
-            "linter": "eslint",
-            "tsConfig": [
-              "apps/api-v2/tsconfig.app.json",
-              "apps/api-v2/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**", "!apps/api-v2/**/*"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "apps/api-v2/jest.config.js",
-            "passWithNoTests": true
-          }
+          "outputs": ["coverage/libs/ui"]
         }
       }
     }

@@ -1,14 +1,13 @@
 module.exports = {
-  name: 'api-v2',
-  preset: '../../jest.config.js',
+  preset: '../../jest.preset.js',
   globals: {
-    'ts-jest': {
-      tsConfig: '<rootDir>/tsconfig.spec.json',
-    },
+    'ts-jest': { tsconfig: '<rootDir>/tsconfig.spec.json' },
   },
   transform: {
     '^.+\\.[tj]s$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/apps/api-v2',
+  displayName: 'api-v2',
+  testEnvironment: 'node',
 };

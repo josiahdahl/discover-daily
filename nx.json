@@ -14,7 +14,8 @@
     "tsconfig.base.json": "*",
     "caprover/discover-daily/Dockerfile": ["discover-daily"],
     ".github/workflows/ci.yml": "*",
-    ".github/workflows/deploy-prod.yml": "*"
+    ".github/workflows/deploy-prod.yml": "*",
+    ".eslintrc.json": "*"
   },
   "tasksRunnerOptions": {
     "default": {
@@ -25,6 +26,12 @@
     }
   },
   "projects": {
+    "api-client": {
+      "tags": ["scope:shared", "type:util"]
+    },
+    "api-v2": {
+      "tags": ["scope:api"]
+    },
     "discover-daily": {
       "tags": ["scope:discover-daily"]
     },
@@ -32,17 +39,19 @@
       "tags": [],
       "implicitDependencies": ["discover-daily"]
     },
-    "api-client": {
-      "tags": ["scope:shared", "type:util"]
-    },
     "integrations-spotify": {
       "tags": ["scope:backend:shared", "type:util"]
     },
     "ui": {
       "tags": []
-    },
-    "api-v2": {
-      "tags": ["scope:api"]
     }
+  },
+  "targetDependencies": {
+    "build": [
+      {
+        "target": "build",
+        "projects": "dependencies"
+      }
+    ]
   }
 }
