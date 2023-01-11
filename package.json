@@ -55,7 +55,7 @@
     "honeycomb-beeline": "^2.5.0",
     "ioredis": "^4.19.2",
     "js-cookie": "^2.2.1",
-    "knex": "^0.21.6",
+    "knex": "^2.4.0",
     "lodash": "^4.17.20",
     "objection": "^2.2.3",
     "passport": "^0.4.1",
